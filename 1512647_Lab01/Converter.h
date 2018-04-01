@@ -64,7 +64,7 @@ public:
 	0: nếu chuyển thành công
 	1: nếu chuyển thất bại (không đọc được ảnh input hay type không chính xác,...)
 	*/
-	int Convert(Mat& sourceImage, Mat& destinationImage, int type);
+	int Convert(const Mat& sourceImage, Mat& destinationImage, int type);
 	int Convert(IplImage* sourceImage, IplImage* destinationImage, int type);
 
 	Converter();
