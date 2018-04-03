@@ -4,6 +4,11 @@
 #include <iostream>
 
 int main(int argc, char **argv) {
+	if (argc < 2) {
+		cout << "loi tham so" << endl;
+		return -1;
+	}
+
 	int ch = 0, b = 0, res = 0;
 	float c = 1;
 	Converter *converter = new Converter();
@@ -47,7 +52,9 @@ int main(int argc, char **argv) {
 		res = colorTransformer->HistogramEqualization(image, dest);
 	}
 	else {
+
 		cout << "not found : " << argv[1] << endl;
+		return -1;
 	}
 
 	if (ch < 4) {
@@ -56,6 +63,9 @@ int main(int argc, char **argv) {
 
 	if (res == 0) {
 		cout << "loi chuyen doi" << endl;
+	}
+	else {
+		cout << "thao tac thanh cong" << endl;
 	}
 
 
