@@ -111,6 +111,7 @@ int ColorTransformer::ChangeContrast(const Mat& sourceImage, Mat& destinationIma
 		}
 	}
 
+	imwrite("contrast.jpg", destinationImage);
 	namedWindow("show", WINDOW_AUTOSIZE);
 	imshow("show", destinationImage);
 	waitKey(0);
@@ -208,6 +209,7 @@ int ColorTransformer::DrawHistogram(const Mat& sourceImage, Mat& histImage) {
 		tmp.release();
 	}
 
+	imwrite("histogram.jpg", histImage);
 	namedWindow("show", WINDOW_AUTOSIZE);
 	imshow("show", histImage);
 	waitKey(0);
@@ -278,6 +280,7 @@ int ColorTransformer::HistogramEqualization(const Mat& sourceImage, Mat& destina
 		}
 	}
 
+	imwrite("equalization_Image.jpg", destinationImage);
 	namedWindow("show", WINDOW_AUTOSIZE);
 	imshow("show", destinationImage);
 	waitKey(0);

@@ -55,7 +55,7 @@ int Converter::GrayScale2RGB(const Mat& sourceImage, Mat& destinationImage) {
 		}
 	}
 
-	
+	imwrite("RGBImage.jpg", destinationImage);
 	namedWindow("show", WINDOW_AUTOSIZE);
 	imshow("show", destinationImage);
 	waitKey(0);
@@ -95,12 +95,13 @@ int Converter::RGB2HSV(const Mat& sourceImage, Mat& destinationImage) {
 	int width = sourceImage.cols;
 	int height = sourceImage.rows;
 
-	destinationImage.create(height, width, CV_32FC3);
+	destinationImage.create(height, width, CV_8UC3);
 
 	//V = m[0][0] * ;
 	for (int y = 0; y < height; ++y) {
 		const unsigned char *data = sourceImage.ptr<uchar>(y);
-		float * data1 = destinationImage.ptr<float>(y);
+		 unsigned char * data1 = destinationImage.ptr<uchar>(y);
+
 		for (int x = 0; x < width; ++x) {
 			int b = *data; data++;
 			int g = *data; data++;
@@ -109,9 +110,10 @@ int Converter::RGB2HSV(const Mat& sourceImage, Mat& destinationImage) {
 			float V1 = m[1][0] * r + m[1][1] * g + m[1][2] * b;
 			float V2 = m[2][0] * r + m[2][1] * g + m[2][2] * b;
 
-			*data1 = atan(V2 / V1); cout << *data1 << " ";  data1++;
-			*data1 = sqrt(pow(V1, 2) + pow(V2, 2)); cout << *data1 << " "; data1++;
-			*data1 = V; cout << *data1 << endl;  data1++;
+			
+			*data1 = round(atan(V2 / V1));  data1++;
+			*data1 = round(sqrt(pow(V1, 2) + pow(V2, 2)));  data1++;
+			*data1 = round(V);  data1++;
 			}
 	}
 
@@ -132,11 +134,11 @@ int Converter::HSV2RGB(const Mat& sourceImage, Mat& destinationImage) {
 
 	for (int y = 0; y < height; ++y) {
 		unsigned char *data1 = destinationImage.ptr<uchar>(y);
-		const float * data = sourceImage.ptr<float>(y);
+		const uchar * data = sourceImage.ptr<uchar>(y);
 		for (int x = 0; x < width; ++x) {
-			float H = *data; data++;
-			float S = *data; data++;
-			float V = *data; data++;
+			int H = *data; data++;
+			int S = *data; data++;
+			int V = *data; data++;
 
 			cout << H << " " << S << " " << V << endl;
 			float V1 = S*cos(H);
@@ -187,6 +189,7 @@ int Converter::RGB2GrayScale(const Mat& sourceImage, Mat& destinationImage){
 		}
 	}
 
+	imwrite("GrayImage.jpg", destinationImage);
 	namedWindow("show", WINDOW_AUTOSIZE);
 	imshow("show", destinationImage);
 	waitKey(0);
