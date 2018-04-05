@@ -1,7 +1,9 @@
 ﻿#pragma once
+#define _USE_MATH_DEFINES
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
+#include <math.h>
 using namespace cv;
 using namespace std;
 

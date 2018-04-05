@@ -132,21 +132,57 @@ int Converter::RGB2HSV(const Mat& sourceImage, Mat& destinationImage) {
 		 unsigned char * data1 = destinationImage.ptr<uchar>(y);
 
 		for (int x = 0; x < width; ++x) {
-			int b = *data; data++;
-			int g = *data; data++;
-			int r = *data; data++;
-			float V = m[0][0] * r + m[0][1] * g + m[0][2] * b;
-			float V1 = m[1][0] * r + m[1][1] * g + m[1][2] * b;
-			float V2 = m[2][0] * r + m[2][1] * g + m[2][2] * b;
 
-			
-			*data1 = round(atan(V2 / V1));  data1++;
-			*data1 = round(sqrt(pow(V1, 2) + pow(V2, 2)));  data1++;
-			*data1 = round(V);  data1++;
+			float b = (float)(*data / 255.0);  data++;
+			float g = (float)(*data / 255.0);  data++;
+			float r = (float)(*data / 255.0);  data++;
+
+
+			float cmax = max(max(b, g), r);
+			float cmin = min(min(g, b), r);
+			float delta = cmax - cmin;
+
+			float tmp = 0;
+			float h, s, v;
+			v = cmax;
+			if (delta < 0.0000001)
+				return 0; // loi
+
+			if (cmax > 0) {
+				s = delta / cmax;
+			}
+			else {
+				s = 0.0;
+				return 0; // loi
+			}
+
+			if (r >= cmax) {
+				h = (g - b) / delta;
+			}
+			else if (g >= cmax) {
+				h = 2.0 + (b - r) / delta;
+			}else
+				h = 4.0 + (r - g) / delta;
+
+			h *= 60;
+
+			if (h < 0.0)
+				h += 360;
+
+			data1[0] = (uchar)((float)(h / 360) * 100);
+			data1[1] = (uchar)(s * 100);
+			data1[2] = (uchar)(v * 100);
+
+			//cout << h << " " << s*100 << " " << v << endl;
+			data1 += 3;
 			}
 	}
 
 	imwrite("hsvImage.jpg", destinationImage);
+	cout << "ket qua duoc luu o file hsvImage.jpg" << endl;
+	namedWindow("show", WINDOW_AUTOSIZE);
+	imshow("show", sourceImage);
+	waitKey(0);
 	return 1;
 
 }
@@ -173,27 +209,65 @@ int Converter::HSV2RGB(const Mat& sourceImage, Mat& destinationImage) {
 		unsigned char *data1 = destinationImage.ptr<uchar>(y);
 		const uchar * data = sourceImage.ptr<uchar>(y);
 		for (int x = 0; x < width; ++x) {
-			int H = *data; data++;
-			int S = *data; data++;
-			int V = *data; data++;
 
-			cout << H << " " << S << " " << V << endl;
-			float V1 = S*cos(H);
-			float V2 = S*sin(H);
+			float h = (float)(*data/100.0); data++;
+			float s = (float)(*data / 100.0); data++;
+			float v = (float)(*data/100.0);  data++;
+			h = h*360.0;
+		
+			if (s <= 0.0) {
+				data1[0] = (uchar)v;
+				data1[1] = (uchar)v;
+				data1[1] = (uchar)v;
+				data1 += 3;
+				continue;
+			}
 
-			int b = round(m[0][0] * V + m[1][0] * V1 + m[2][0] * V2);
-			int g = round(m[0][1] * V + m[1][1] * V1 + m[2][1] * V2);
-			int r = round(m[0][2] * V + m[1][2] * V1 + m[2][2] * V2);
+			int r, g, b;
+			float hh, p, q, t, ff;
+			int i;
+			hh = h;
+			if (hh >= 360.0) hh = 0.0;
+			hh /= 60.0;
+			i = (int)hh;
+			ff = hh - i;
+			p = v * (1.0 - s);
+			q = v * (1.0 - (s * ff));
+			t = v * (1.0 - (s * (1.0 - ff)));
 
-			*data1 = b; ++data1;
-			*data1 = g; ++data1;
-			*data1 = r; ++data1;
+			p *= 255;
+			q *= 255;
+			t *= 255;
+			v *= 255;
+			switch (i) {
+			case 0: r = v; g = t; b = p;
+				break;
+			case 1: r = q; g = v; b = p;
+				break;
+			case 2: r = p; g = v;b = t;
+				break;
+			case 3:r = p;g = q;b = v;
+				break;
+			case 4:r = t;g = p;b = v;
+				break;
+			case 5:
+			default:r = v;g = p;b = q;
+				break;
+		
+			}
+
+			data1[0] = b;
+			data1[1] = g;
+			data1[2] = r;
+	
+			data1 += 3;
 		}
 	}
 
 	namedWindow("show", WINDOW_AUTOSIZE);
 	imshow("show", destinationImage);
 	waitKey(0);
+	return 1;
 }
 
 const float cr = 0.299, cg = 0.587, cb = 0.114;
