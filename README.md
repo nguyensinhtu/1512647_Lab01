@@ -1,6 +1,6 @@
 # 1512647_Lab01
 
-# Chạy command <br>
+# Chạy command cho những câu lệnh bình thường <br>
 ```
 "<Tên chương trình><command><path>" 
 ```
@@ -10,7 +10,7 @@
  "<Tên chương trình><command><path><độ sáng>" 
  ```
  
-# Thay đồi độ tương phản <br>
+# Thay đổi độ tương phản <br>
 ```
  "<Tên chương trình><command><path><độ tương phản>" 
  ```
